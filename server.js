@@ -26,8 +26,10 @@ async function performScrape() {
     }
 }
 
-// Run initial scrape on startup
-performScrape();
+// Run initial scrape after a delay to ensure server is fully started
+setTimeout(() => {
+    performScrape();
+}, 5000);
 
 // Schedule scrape every hour (3600000 ms)
 setInterval(performScrape, 60 * 60 * 1000);
