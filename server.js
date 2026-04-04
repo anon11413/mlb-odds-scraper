@@ -1,40 +1,38 @@
 const express = require('express');
-const { scrapeMLB } = require('./scraper');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const API_KEY = process.env.SCRAPER_API_KEY || 'default-secret-key';
+
+// Middleware
+app.use(express.json());
+app.use(express.static('public'));
 
 // In-memory cache
 let cachedData = [];
 let lastScrapedTime = null;
-let isScraping = false;
+let isScraping = false; // Still used to show status on frontend
 
-async function performScrape() {
-    if (isScraping) return;
-    isScraping = true;
-    console.log(`[${new Date().toLocaleTimeString()}] Starting scheduled scrape...`);
-    try {
-        const data = await scrapeMLB();
-        cachedData = data;
-        lastScrapedTime = new Date();
-        console.log(`[${new Date().toLocaleTimeString()}] Scrape successful. ${data.length} games found.`);
-    } catch (error) {
-        console.error(`[${new Date().toLocaleTimeString()}] Scrape failed:`, error.message);
-    } finally {
-        isScraping = false;
+// Endpoint to receive data from local scraper
+app.post('/api/odds', (req, res) => {
+    const { key, data } = req.body;
+    
+    if (key !== API_KEY) {
+        return res.status(403).json({ success: false, error: 'Unauthorized' });
     }
-}
 
-// Run initial scrape after a delay to ensure server is fully started
-setTimeout(() => {
-    performScrape();
-}, 5000);
+    if (!Array.isArray(data)) {
+        return res.status(400).json({ success: false, error: 'Invalid data format' });
+    }
 
-// Schedule scrape every hour (3600000 ms)
-setInterval(performScrape, 60 * 60 * 1000);
-
-app.use(express.static('public'));
+    cachedData = data;
+    lastScrapedTime = new Date();
+    isScraping = false;
+    
+    console.log(`[${new Date().toLocaleTimeString()}] Received update: ${data.length} games.`);
+    res.json({ success: true, received: data.length });
+});
 
 // Endpoint to get the current cached data
 app.get('/api/odds', (req, res) => {
@@ -46,17 +44,15 @@ app.get('/api/odds', (req, res) => {
     });
 });
 
-// Endpoint to manually trigger a scrape
-app.get('/api/scrape-manual', async (req, res) => {
-    if (isScraping) {
-        return res.status(429).json({ success: false, error: 'Scrape already in progress' });
+// Endpoint to indicate a scrape has started (called by local scraper)
+app.post('/api/scrape-status', (req, res) => {
+    const { key, status } = req.body;
+    if (key === API_KEY) {
+        isScraping = (status === 'started');
+        res.json({ success: true });
+    } else {
+        res.status(403).json({ success: false });
     }
-    await performScrape();
-    res.json({ 
-        success: true, 
-        data: cachedData, 
-        lastUpdated: lastScrapedTime 
-    });
 });
 
 app.get('/', (req, res) => {
@@ -65,4 +61,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`API Key for local scraper: ${API_KEY}`);
 });

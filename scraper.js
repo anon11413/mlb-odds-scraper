@@ -129,7 +129,7 @@ async function scrapeMLB() {
     console.log('Launching browser with stealth...');
     const browser = await chromium.launch({ 
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Critical for Docker/Render
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     
     try {
@@ -154,7 +154,6 @@ async function scrapeMLB() {
         console.log(`Found ${uniqueLinks.length} games. Starting detailed scrape...`);
         
         const results = [];
-        // Process all games sequentially on Render to save memory (512MB limit)
         for (let i = 0; i < uniqueLinks.length; i++) {
             const link = uniqueLinks[i];
             console.log(`[${i + 1}/${uniqueLinks.length}] Scraping: ${link}`);
@@ -170,6 +169,53 @@ async function scrapeMLB() {
     } finally {
         await browser.close();
     }
+}
+
+// LOCAL PUSH LOGIC
+const RENDER_URL = process.env.RENDER_URL || 'http://localhost:3001';
+const API_KEY = process.env.SCRAPER_API_KEY || 'default-secret-key';
+
+async function updateServerStatus(status) {
+    try {
+        await fetch(`${RENDER_URL}/api/scrape-status`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: API_KEY, status })
+        });
+    } catch (e) {
+        console.error('Failed to update server status:', e.message);
+    }
+}
+
+async function pushDataToServer(data) {
+    try {
+        const response = await fetch(`${RENDER_URL}/api/odds`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: API_KEY, data })
+        });
+        const result = await response.json();
+        console.log('Server response:', result);
+    } catch (e) {
+        console.error('Failed to push data to server:', e.message);
+    }
+}
+
+async function runLocalScraper() {
+    console.log(`[${new Date().toLocaleString()}] Starting local scrape process...`);
+    await updateServerStatus('started');
+    const data = await scrapeMLB();
+    console.log(`Scrape finished, pushing ${data.length} records to ${RENDER_URL}`);
+    await pushDataToServer(data);
+    await updateServerStatus('finished');
+    console.log(`[${new Date().toLocaleString()}] Process complete. Sleeping...`);
+}
+
+// Check if run directly
+if (require.main === module) {
+    runLocalScraper();
+    // Run every hour
+    setInterval(runLocalScraper, 60 * 60 * 1000);
 }
 
 module.exports = { scrapeMLB };
