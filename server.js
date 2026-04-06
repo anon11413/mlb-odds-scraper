@@ -35,6 +35,11 @@ app.post('/api/odds', (req, res) => {
     res.json({ success: true, received: data.length });
 });
 
+// Endpoint to check server version
+app.get('/api/version', (req, res) => {
+    res.json({ version: '1.0.1', timestamp: new Date() });
+});
+
 // Endpoint to get the current cached data
 app.get('/api/odds', (req, res) => {
     res.json({ 

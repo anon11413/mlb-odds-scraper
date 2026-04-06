@@ -140,7 +140,7 @@ async function scrapeMLB() {
         const page = await context.newPage();
         
         console.log('Fetching game links from Action Network...');
-        await page.goto('https://www.actionnetwork.com/mlb/odds', { waitUntil: 'networkidle', timeout: 60000 });
+        await page.goto('https://www.actionnetwork.com/mlb/odds', { waitUntil: 'domcontentloaded', timeout: 60000 });
         
         // Wait for games to appear
         await page.waitForSelector('a[href*="/mlb-game/"]', { timeout: 15000 }).catch(() => console.log('Timeout waiting for game links'));
@@ -195,8 +195,14 @@ async function pushDataToServer(data) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key: API_KEY, data })
         });
-        const result = await response.json();
-        console.log('Server response:', result);
+        
+        const text = await response.text();
+        try {
+            const result = JSON.parse(text);
+            console.log('Server response:', result);
+        } catch (e) {
+            console.error('Server returned non-JSON response:', text.substring(0, 200));
+        }
     } catch (e) {
         console.error('Failed to push data to server:', e.message);
     }
