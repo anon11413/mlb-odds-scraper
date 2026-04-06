@@ -61,6 +61,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server v1.0.1 running at http://localhost:${PORT}`);
     console.log(`API Key for local scraper: ${API_KEY}`);
 });
