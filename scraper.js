@@ -127,10 +127,16 @@ async function scrapeGame(browser, gameUrl) {
 }
 
 async function scrapeMLB() {
-    console.log('Launching browser with stealth...');
+    console.log('Launching browser with stealth on Termux...');
     const browser = await chromium.launch({ 
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        executablePath: '/data/data/com.termux/files/usr/bin/chromium-browser',
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu'
+        ]
     });
     
     try {

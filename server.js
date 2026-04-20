@@ -17,12 +17,8 @@ let isScraping = false; // Still used to show status on frontend
 
 // Endpoint to receive data from local scraper
 app.post('/api/odds', (req, res) => {
-    const { key, data } = req.body;
+     const { key, data } = req.body; if (key !== API_KEY) return res.status(403).json({ success: false, error: 'Unauthorized' });
     
-    if (key !== API_KEY) {
-        return res.status(403).json({ success: false, error: 'Unauthorized' });
-    }
-
     if (!Array.isArray(data)) {
         return res.status(400).json({ success: false, error: 'Invalid data format' });
     }
