@@ -1,3 +1,8 @@
+require('dotenv').config();
+const { chromium } = require('playwright-extra');
+const stealth = require('puppeteer-extra-plugin-stealth')();
+chromium.use(stealth);
+
 async function scrapeGame(browser, gameUrl) {
     const context = await browser.newContext({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
@@ -119,7 +124,7 @@ async function scrapeMLB() {
     }
 }
 
-const RENDER_URL = process.env.RENDER_URL || 'http://localhost:3001';
+const RENDER_URL = process.env.RENDER_URL || 'https://mlb-odds-scraper.onrender.com';
 const API_KEY = process.env.SCRAPER_API_KEY || 'default-secret-key';
 
 async function updateServerStatus(status) {
