@@ -14,43 +14,32 @@ async function scrapeGame(browser, gameUrl) {
         await page.goto(gameUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
         await page.waitForTimeout(5000);
 
-        async function getTotalsFromSection(isF5) {
-            return await page.evaluate((isF5) => {
-                const tables = Array.from(document.querySelectorAll('table'));
-                // Full Game totals are in the "Open" table, F5 totals are in the second "Over/Under" table
-                if (!isF5) {
-                    const openTable = tables.find(t => t.innerText.includes('Matchup') && t.innerText.includes('Open'));
-                    if (openTable) {
-                        const row = Array.from(openTable.querySelectorAll('tr')).find(r => r.innerText.includes('Cardinals'));
-                        if (row) {
-                            const text = row.innerText;
-                            const matches = text.match(/([ou]\d+)/g);
-                            if (matches) return `${matches[0]} ${matches[0].replace('o', 'u')}`;
-                        }
-                    }
-                } else {
-                    const ouTable = tables.find(t => t.innerText.includes('Matchup') && t.innerText.includes('Over') && !t.innerText.includes('Open'));
-                    if (ouTable) {
-                        const row = Array.from(ouTable.querySelectorAll('tr')).find(r => r.innerText.includes('Marlins'));
-                        if (row) {
-                            const text = row.innerText;
-                            const matches = text.match(/([ou]\d+\.?\d*)/g);
-                            if (matches && matches.length >= 2) return `${matches[0]} ${matches[1]}`;
-                        }
+        async function getTotalsFromSection() {
+            return await page.evaluate(() => {
+                const table = Array.from(document.querySelectorAll('table')).find(t => t.innerText.includes('Matchup') && t.innerText.includes('Total'));
+                if (table) {
+                    const text = table.innerText;
+                    // Cardinals row for total: "Cardinals 14-9 +1.5 +1.5 -167 o8 -116 +124"
+                    // Match 'o' or 'u' followed by a digit. 
+                    const matches = text.match(/([ou]\d+\.?\d*)/g);
+                    // Filter out the 'o0.5' player props if present, keep only the totals (>= 7)
+                    if (matches) {
+                        const totals = matches.filter(m => parseFloat(m.substring(1)) >= 3);
+                        if (totals.length >= 2) return `${totals[0]} ${totals[1]}`;
                     }
                 }
                 return 'N/A';
-            }, isF5);
+            });
         }
 
-        const fullGameOU = await getTotalsFromSection(false);
+        const fullGameOU = await getTotalsFromSection();
 
         let f5OU = 'N/A';
         const f5Tab = page.locator('.period-selector__item').filter({ hasText: /^F5$/i }).first();
         if (await f5Tab.isVisible()) {
             await f5Tab.evaluate(el => el.click());
             await page.waitForTimeout(3000);
-            f5OU = await getTotalsFromSection(true);
+            f5OU = await getTotalsFromSection();
         }
 
         const teams = await page.evaluate(() => {
