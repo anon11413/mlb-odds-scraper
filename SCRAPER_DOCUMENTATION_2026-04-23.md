@@ -26,7 +26,7 @@ To initiate a full scrape of all current MLB games and push the data to the site
 
 ```bash
 cd mlb-odds-scraper
-node -e "Object.defineProperty(process, 'platform', { value: 'linux' }); require('./scraper.js').runLocalScraper();"
+node -e "Object.defineProperty(process, 'platform', { value: 'linux' }); const s = require('./scraper.js'); s.scrapeMLB().then(data => s.pushDataToServer(data));"
 ```
 
 ## Configuration
