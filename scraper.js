@@ -16,16 +16,13 @@ async function scrapeGame(browser, gameUrl) {
 
         async function getTotalsFromSection() {
             return await page.evaluate(() => {
-                const table = Array.from(document.querySelectorAll('table')).find(t => t.innerText.includes('Matchup') && t.innerText.includes('Total'));
+                const table = Array.from(document.querySelectorAll('table')).find(t => t.innerText.includes('Matchup') && t.innerText.includes('Over'));
                 if (table) {
-                    const text = table.innerText;
-                    // Cardinals row for total: "Cardinals 14-9 +1.5 +1.5 -167 o8 -116 +124"
-                    // Match 'o' or 'u' followed by a digit. 
-                    const matches = text.match(/([ou]\d+\.?\d*)/g);
-                    // Filter out the 'o0.5' player props if present, keep only the totals (>= 7)
-                    if (matches) {
-                        const totals = matches.filter(m => parseFloat(m.substring(1)) >= 3);
-                        if (totals.length >= 2) return `${totals[0]} ${totals[1]}`;
+                    const rows = Array.from(table.querySelectorAll('tr'));
+                    // Row 1 is the first data row (the first team in the matchup)
+                    if (rows.length > 1) {
+                        const matches = rows[1].innerText.match(/([ou]\d+\.?\d*)/g);
+                        if (matches && matches.length >= 2) return `${matches[0]} ${matches[1]}`;
                     }
                 }
                 return 'N/A';
@@ -49,9 +46,10 @@ async function scrapeGame(browser, gameUrl) {
         });
 
         return { 
-            matchup: `${teams.away} vs. ${teams.home}`,
-            full_game_ou: fullGameOU,
-            f5_ou: f5OU,
+            awayTeam: teams.away, 
+            homeTeam: teams.home, 
+            fullGameOpenOU: fullGameOU, 
+            f5OpenOU: f5OU,
             status: 'success'
         };
     } catch (e) {
