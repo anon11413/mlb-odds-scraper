@@ -124,8 +124,8 @@ async function scrapeMLB() {
     }
 }
 
-const RENDER_URL = process.env.RENDER_URL || 'https://mlb-odds-scraper.onrender.com';
-const API_KEY = process.env.SCRAPER_API_KEY || 'default-secret-key';
+const RENDER_URL = 'https://mlb-odds-scraper.onrender.com';
+const API_KEY = 'my_mlb_secret_777';
 
 async function updateServerStatus(status) {
     try {
@@ -174,4 +174,4 @@ if (require.main === module) {
     setInterval(runLocalScraper, 60 * 60 * 1000);
 }
 
-module.exports = { scrapeMLB, scrapeGame };
+module.exports = { scrapeMLB, scrapeGame, pushDataToServer };
