@@ -4,17 +4,17 @@ const stealth = require('puppeteer-extra-plugin-stealth')();
 chromium.use(stealth);
 
 /**
- * Extracts consensus Over/Under totals from the Odds Comparison section.
+ * Extracts opening Over/Under totals from the Odds Comparison section.
  */
-async function getConsensusTotals(page) {
+async function getOpenTotals(page) {
     return await page.evaluate(() => {
-        // Find the table with "SportsBook" and "Consensus"
-        const table = Array.from(document.querySelectorAll('table')).find(t => t.innerText.includes('SportsBook') && t.innerText.includes('Consensus'));
+        // Find the table with "SportsBook" and "Open"
+        const table = Array.from(document.querySelectorAll('table')).find(t => t.innerText.includes('SportsBook') && t.innerText.includes('Open'));
         if (table) {
             const rows = Array.from(table.querySelectorAll('tr'));
-            const consensusRow = rows.find(r => r.innerText.includes('Consensus'));
-            if (consensusRow) {
-                const matches = consensusRow.innerText.match(/([ou]\d+\.?\d*)/g);
+            const openRow = rows.find(r => r.innerText.includes('Open'));
+            if (openRow) {
+                const matches = openRow.innerText.match(/([ou]\d+\.?\d*)/g);
                 if (matches && matches.length >= 2) return `${matches[0]} ${matches[1]}`;
                 if (matches && matches.length === 1) return matches[0];
             }
@@ -35,26 +35,27 @@ async function scrapeGame(browser, gameUrl) {
         await page.waitForTimeout(5000);
 
         // 1. Locate the Odds Comparison section and switch market to Over/Under
-        const section = page.locator('div, section').filter({ hasText: /Odds Comparison/i }).filter({ has: page.locator('table') }).last();
-        if (await section.isVisible()) {
-            const marketDropdown = section.locator('select').filter({ hasText: /over\/under/i });
+        const comparisonSection = page.locator('div, section').filter({ hasText: /Odds Comparison/i }).filter({ has: page.locator('table') }).last();
+        if (await comparisonSection.isVisible()) {
+            const marketDropdown = comparisonSection.locator('select').filter({ hasText: /over\/under/i });
             if (await marketDropdown.isVisible()) {
                 await marketDropdown.selectOption('total');
                 await page.waitForTimeout(2000);
             }
         }
 
-        // 2. Extract Full Game Consensus
-        const fullGameOU = await getConsensusTotals(page);
+        // 2. Extract Full Game Open
+        const fullGameOU = await getOpenTotals(page);
 
         // 3. Switch to F5 Period
-        const f5Tab = page.locator('.period-selector__item', { hasText: 'F5' }).first();
+        const f5Tab = comparisonSection.locator('.period-selector__item', { hasText: 'F5' });
         let f5OU = 'N/A';
         if (await f5Tab.isVisible()) {
             await f5Tab.click({ force: true });
             await page.waitForTimeout(4000);
-            f5OU = await getConsensusTotals(page);
+            f5OU = await getOpenTotals(page);
         }
+
 
         // 4. Extract Team Names from H1
         const teams = await page.evaluate(() => {
