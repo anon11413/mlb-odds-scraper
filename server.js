@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
@@ -10,9 +11,21 @@ const API_KEY = process.env.SCRAPER_API_KEY || 'default-secret-key';
 app.use(express.json());
 app.use(express.static('public'));
 
-// In-memory cache
+// Load initial data from file if it exists (persistence across restarts)
+const DATA_PATH = path.join(__dirname, 'public', 'data.json');
 let cachedData = [];
 let lastScrapedTime = null;
+
+if (fs.existsSync(DATA_PATH)) {
+    try {
+        const fileContent = fs.readFileSync(DATA_PATH, 'utf8');
+        cachedData = JSON.parse(fileContent);
+        lastScrapedTime = fs.statSync(DATA_PATH).mtime;
+        console.log(`Loaded ${cachedData.length} games from persistent storage.`);
+    } catch (err) {
+        console.error('Error loading persistent data:', err);
+    }
+}
 let isScraping = false; // Still used to show status on frontend
 
 // Endpoint to receive data from local scraper
@@ -26,6 +39,13 @@ app.post('/api/odds', (req, res) => {
     cachedData = data;
     lastScrapedTime = new Date();
     isScraping = false;
+
+    // Save to disk so Render can reload it after a sleep/restart
+    try {
+        fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
+    } catch (err) {
+        console.error('Failed to save data to disk:', err);
+    }
     
     console.log(`[${new Date().toLocaleTimeString()}] Received update: ${data.length} games.`);
     res.json({ success: true, received: data.length });

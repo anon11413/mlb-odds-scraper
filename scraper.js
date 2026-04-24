@@ -149,11 +149,34 @@ async function keepAlive() {
     }
 }
 
+const fs = require('fs');
+const { execSync } = require('child_process');
+
 async function runLocalScraper() {
     console.log(`[${new Date().toLocaleString()}] Starting scrape process...`);
     const data = await scrapeMLB();
-    console.log(`Pushing ${data.length} records to ${RENDER_URL}`);
-    await pushDataToServer(data);
+    
+    if (data && data.length > 0) {
+        // Save to file for persistence
+        const dataPath = path.join(__dirname, 'public', 'data.json');
+        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+        console.log(`Saved data to ${dataPath}`);
+
+        // Push to GitHub to persist across Render restarts
+        try {
+            console.log('Pushing data to GitHub...');
+            execSync('git add public/data.json');
+            execSync('git commit -m "chore: update odds data [automated]"');
+            execSync('git push origin main'); // Adjust branch name if necessary
+            console.log('Data persisted to GitHub.');
+        } catch (gitErr) {
+            console.error('Git push failed (possibly no changes or auth issue):', gitErr.message);
+        }
+
+        console.log(`Pushing ${data.length} records to ${RENDER_URL}`);
+        await pushDataToServer(data);
+    }
+    
     console.log('Process complete.');
 }
 
