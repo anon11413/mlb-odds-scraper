@@ -167,7 +167,7 @@ async function runLocalScraper() {
             console.log('Pushing data to GitHub...');
             execSync('git add public/data.json');
             execSync('git commit -m "chore: update odds data [automated]"');
-            execSync('git push origin main'); // Adjust branch name if necessary
+            execSync('git push origin master'); // Updated to master branch
             console.log('Data persisted to GitHub.');
         } catch (gitErr) {
             console.error('Git push failed (possibly no changes or auth issue):', gitErr.message);
