@@ -165,7 +165,7 @@ async function runLocalScraper() {
         // Push to GitHub to persist across Render restarts
         try {
             console.log('Pushing data to GitHub...');
-            execSync('git add public/data.json');
+            execSync('git add -f public/data.json');
             execSync('git commit -m "chore: update odds data [automated]"');
             execSync('git push origin master'); // Updated to master branch
             console.log('Data persisted to GitHub.');
@@ -188,4 +188,4 @@ if (require.main === module) {
     setInterval(keepAlive, 10 * 60 * 1000);
 }
 
-module.exports = { scrapeMLB, scrapeGame, pushDataToServer };
+module.exports = { scrapeMLB, scrapeGame, pushDataToServer, runLocalScraper };
