@@ -1,0 +1,100 @@
+[
+  {
+    "away": "Tigers",
+    "home": "Reds",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Red Sox",
+    "home": "Orioles",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Guardians",
+    "home": "Blue Jays",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Twins",
+    "home": "Rays",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o3.5 u3.5",
+    "status": "success"
+  },
+  {
+    "away": "Rockies",
+    "home": "Mets",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o3.5 u3.5",
+    "status": "success"
+  },
+  {
+    "away": "Phillies",
+    "home": "Braves",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Pirates",
+    "home": "Brewers",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o3.5 u3.5",
+    "status": "success"
+  },
+  {
+    "away": "Nationals",
+    "home": "White Sox",
+    "fullGameOpenOU": "o9.5 u9.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Angels",
+    "home": "Royals",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Athletics",
+    "home": "Rangers",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Yankees",
+    "home": "Astros",
+    "fullGameOpenOU": "o9.5 u9.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Mariners",
+    "home": "Cardinals",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Marlins",
+    "home": "Giants",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o3.5 u3.5",
+    "status": "success"
+  },
+  {
+    "away": "Cubs",
+    "home": "Dodgers",
+    "fullGameOpenOU": "o9.5 u9.5",
+    "f5OpenOU": "o5.5 u5.5",
+    "status": "success"
+  }
+]
