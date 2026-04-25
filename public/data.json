@@ -1,15 +1,8 @@
 [
   {
-    "away": "Tigers",
-    "home": "Reds",
-    "fullGameOpenOU": "o8.5 u8.5",
-    "f5OpenOU": "o4.5 u4.5",
-    "status": "success"
-  },
-  {
-    "away": "Red Sox",
-    "home": "Orioles",
-    "fullGameOpenOU": "o8.5 u8.5",
+    "away": "Mariners",
+    "home": "Cardinals",
+    "fullGameOpenOU": "o8 u8",
     "f5OpenOU": "o4.5 u4.5",
     "status": "success"
   },
@@ -21,36 +14,57 @@
     "status": "success"
   },
   {
-    "away": "Twins",
-    "home": "Rays",
+    "away": "Marlins",
+    "home": "Giants",
     "fullGameOpenOU": "o7.5 u7.5",
     "f5OpenOU": "o3.5 u3.5",
+    "status": "success"
+  },
+  {
+    "away": "Twins",
+    "home": "Rays",
+    "fullGameOpenOU": "o8 u8",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Nationals",
+    "home": "White Sox",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
     "status": "success"
   },
   {
     "away": "Rockies",
     "home": "Mets",
-    "fullGameOpenOU": "o7.5 u7.5",
-    "f5OpenOU": "o3.5 u3.5",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
     "status": "success"
   },
   {
-    "away": "Phillies",
-    "home": "Braves",
-    "fullGameOpenOU": "o8.5 u8.5",
-    "f5OpenOU": "o4.5 u4.5",
+    "away": "Padres",
+    "home": "Diamondbacks",
+    "fullGameOpenOU": "o16.5 u16.5",
+    "f5OpenOU": "o9.5 u9.5",
+    "status": "success"
+  },
+  {
+    "away": "Athletics",
+    "home": "Rangers",
+    "fullGameOpenOU": "o7.5 u7.5",
+    "f5OpenOU": "o3.5 u3.5",
     "status": "success"
   },
   {
     "away": "Pirates",
     "home": "Brewers",
     "fullGameOpenOU": "o7.5 u7.5",
-    "f5OpenOU": "o3.5 u3.5",
+    "f5OpenOU": "o4.5 u4.5",
     "status": "success"
   },
   {
-    "away": "Nationals",
-    "home": "White Sox",
+    "away": "Yankees",
+    "home": "Astros",
     "fullGameOpenOU": "o9.5 u9.5",
     "f5OpenOU": "o4.5 u4.5",
     "status": "success"
@@ -63,31 +77,10 @@
     "status": "success"
   },
   {
-    "away": "Athletics",
-    "home": "Rangers",
-    "fullGameOpenOU": "o8.5 u8.5",
-    "f5OpenOU": "o4.5 u4.5",
-    "status": "success"
-  },
-  {
-    "away": "Yankees",
-    "home": "Astros",
+    "away": "Tigers",
+    "home": "Reds",
     "fullGameOpenOU": "o9.5 u9.5",
-    "f5OpenOU": "o4.5 u4.5",
-    "status": "success"
-  },
-  {
-    "away": "Mariners",
-    "home": "Cardinals",
-    "fullGameOpenOU": "o8.5 u8.5",
-    "f5OpenOU": "o4.5 u4.5",
-    "status": "success"
-  },
-  {
-    "away": "Marlins",
-    "home": "Giants",
-    "fullGameOpenOU": "o7.5 u7.5",
-    "f5OpenOU": "o3.5 u3.5",
+    "f5OpenOU": "o5.5 u5.5",
     "status": "success"
   },
   {
@@ -95,6 +88,20 @@
     "home": "Dodgers",
     "fullGameOpenOU": "o9.5 u9.5",
     "f5OpenOU": "o5.5 u5.5",
+    "status": "success"
+  },
+  {
+    "away": "Phillies",
+    "home": "Braves",
+    "fullGameOpenOU": "o8.5 u8.5",
+    "f5OpenOU": "o4.5 u4.5",
+    "status": "success"
+  },
+  {
+    "away": "Red Sox",
+    "home": "Orioles",
+    "fullGameOpenOU": "N/A",
+    "f5OpenOU": "N/A",
     "status": "success"
   }
 ]
